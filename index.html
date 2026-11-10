@@ -62,40 +62,31 @@ async function syncGoogle(){const thisSync=++syncVersion;const notice=$("#notice
 $("#sync").onclick=syncGoogle;
 window.addEventListener("popstate",()=>{const t=new URLSearchParams(location.search).get("tab");tab=validTabs.includes(t)?t:"overview";document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));render()});document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));render();syncGoogle();
 
-// Check GitHub Pages workflow periodically; no websocket server or credentials required.
-const DEPLOY_API="https://api.github.com/repos/EAGulevich/English-Tracker/actions/runs?per_page=5";
-const DEPLOY_VERSION="21dcfe7ab8fc34a70cd0e9fc6b1e253f6f464a8a";
-const DEPLOY_SEEN_KEY="english-tracker-deploy-seen";
-let deployReloading=false;
-function refreshToDeployment(sha){
-  if(deployReloading)return;
-  deployReloading=true;
-  try{sessionStorage.setItem(DEPLOY_SEEN_KEY,sha)}catch(e){}
-  const url=new URL(location.href);
-  url.searchParams.set("v",sha.slice(0,12));
-  location.replace(url.href);
-}
+// Compare the published HTML version without calling the rate-limited GitHub API.
+const SITE_VERSION="2026-11-11-static-version-1";
+let deploymentRefreshPending=false;
 async function checkDeployment(){
-  const el=document.getElementById("deploy-status"),label=document.getElementById("deploy-label");
-  el.hidden=true;
+  if(deploymentRefreshPending || document.hidden)return;
+  const indicator=document.getElementById("deploy-status");
+  const label=document.getElementById("deploy-label");
   try{
-    const response=await fetch(DEPLOY_API,{cache:"no-store",headers:{"Accept":"application/vnd.github+json"}});
+    const response=await fetch(location.pathname+"?deployment-check="+Date.now(),{cache:"no-store"});
     if(!response.ok)return;
-    const payload=await response.json();
-    const run=payload.workflow_runs?.find(item=>item.name==="pages build and deployment");
-    if(!run)return;
-    const sha=run.head_sha;
-    let seen=DEPLOY_VERSION;
-    try{seen=sessionStorage.getItem(DEPLOY_SEEN_KEY)||DEPLOY_VERSION}catch(e){}
-    if(run.status!=="completed"){
-      if(sha!==seen){el.className="deploy-status busy";label.textContent="Сайт обновляется…";el.hidden=false}
-    }else if(run.conclusion==="success" && sha!==seen){
-      refreshToDeployment(sha);
-    }else if(run.conclusion!=="success" && sha!==seen){
-      el.className="deploy-status failed";label.textContent="Ошибка публикации";el.hidden=false;
-    }
-  }catch(e){el.hidden=true}
+    const html=await response.text();
+    const match=html.match(/const SITE_VERSION="([^"]+)"/);
+    if(!match || match[1]===SITE_VERSION)return;
+    deploymentRefreshPending=true;
+    indicator.className="deploy-status busy";
+    label.textContent="Доступна новая версия. Обновляем…";
+    indicator.hidden=false;
+    const url=new URL(location.href);
+    url.searchParams.set("v",match[1]);
+    location.replace(url.href);
+  }catch(error){indicator.hidden=true}
 }
+document.getElementById("deploy-status").hidden=true;
 document.getElementById("deploy-reload").hidden=true;
-checkDeployment();setInterval(checkDeployment,20000);
+checkDeployment();
+setInterval(checkDeployment,60000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkDeployment()});
 </script></body></html>
