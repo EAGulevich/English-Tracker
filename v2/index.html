@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English Tracker 2.0 — интерактивный прототип</title>
+<meta name="description" content="Согласование English Tracker 2.0: семь интерактивных разделов, темы, демо-словарь и учебный план.">
+<style>
+:root{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}
+html[data-theme=dark]{color-scheme:dark;--bg:#10111c;--panel:#1a1b2a;--panel2:#232439;--border:#34364e;--text:#f8f6ff;--muted:#aaa8c0;--accent:#ab91ff;--mint:#82dfc8;--yellow:#f0c98c;--red:#f49ab9;--gray:#9295a8;--shadow:#09081255}
+html[data-theme=light]{color-scheme:light;--bg:#f6f4fa;--panel:#ffffff;--panel2:#f0ecf8;--border:#e4e0ee;--text:#28233e;--muted:#777187;--accent:#7657d0;--mint:#208a75;--yellow:#b17929;--red:#b75179;--gray:#9595a5;--shadow:#27204a14}
+body{background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.layout{display:grid;grid-template-columns:238px minmax(0,1fr);min-height:100vh}
+aside{background:var(--panel);border-right:1px solid var(--border);padding:27px 15px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:11px;padding:2px 8px 29px}.logo{width:43px;height:43px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,#b28cff,#7555d8);color:white;font-weight:800;box-shadow:0 10px 24px #7957dc44}.brand b{font-size:17px;letter-spacing:-.5px}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:1.6px}
+.nav-title{color:var(--muted);font-size:10px;letter-spacing:1.5px;font-weight:800;text-transform:uppercase;padding:5px 12px 10px}
+nav{display:grid;gap:5px}.nav{border:1px solid transparent;background:none;color:var(--muted);padding:11px 13px;border-radius:13px;display:flex;gap:12px;align-items:center;text-align:left;font-weight:650;width:100%}
+.nav:hover{background:var(--panel2);color:var(--text)}.nav.active{background:#9973f01e;border-color:#9472ef55;color:var(--accent)}
+.ic{width:20px;display:inline-flex;align-items:center;justify-content:center;font-size:18px}
+.aside-foot{margin-top:auto;background:var(--panel2);border:1px solid var(--border);border-radius:16px;padding:15px}.aside-foot strong{font-size:12px}.aside-foot p{font-size:11px;color:var(--muted);margin:5px 0}
+main{width:100%;max-width:1530px;margin:auto;padding:23px clamp(18px,3vw,48px) 70px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:25px;flex-wrap:wrap}.crumb{color:var(--muted);font-size:12px}.topright{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.pill{background:var(--panel);border:1px solid var(--border);border-radius:99px;padding:8px 12px;font-size:11px;color:var(--muted);font-weight:700}.pill.accent{color:var(--accent);border-color:#9973f066}
+.avatar{display:grid;place-items:center;color:white;background:linear-gradient(145deg,#ad91f5,#7051cb);width:35px;height:35px;border-radius:50%;font-weight:800}
+h1{font-size:clamp(26px,3vw,38px);line-height:1.16;letter-spacing:-1.3px;margin:0 0 9px}h2,h3{margin:0;font-size:17px;letter-spacing:-.35px}p.sub{color:var(--muted);font-size:13px;margin:0 0 25px;max-width:760px}
+.view{display:none}.view.current{display:block}.grid{display:grid;gap:16px}.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin:17px 0}.twocol{grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);margin:17px 0}.three{grid-template-columns:repeat(3,minmax(0,1fr));margin:17px 0}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:22px;padding:22px;box-shadow:0 10px 30px var(--shadow);min-width:0}.card h3{margin-bottom:4px}.hint{color:var(--muted);font-size:12px}.metric{min-height:140px;position:relative}.metric .n{font-size:32px;font-weight:800;letter-spacing:-1px;margin:12px 0 2px}.metric .symbol{position:absolute;right:19px;top:19px;background:var(--panel2);border-radius:12px;padding:7px;font-size:17px}.metric .label{font-size:12px;color:var(--muted);font-weight:650}.good{color:var(--mint)}.purple{color:var(--accent)}.gold{color:var(--yellow)}.rose{color:var(--red)}
+.hero{min-height:223px;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:28px 34px;border-radius:25px;color:white;background:linear-gradient(115deg,#402661,#302b67 58%,#254b51);overflow:hidden;position:relative;border:1px solid #655688}
+.hero:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;border:2px solid #ffffff18;right:20px;top:-60px;box-shadow:0 0 0 44px #ffffff05,0 0 0 86px #ffffff05}
+.hero>*{position:relative}.hero strong{color:#d4c6ff;letter-spacing:1.5px;text-transform:uppercase;font-size:11px}.hero h2{font-size:clamp(24px,3vw,35px);margin:10px 0;line-height:1.18;max-width:500px}.hero p{font-size:13px;color:#e1dbea;max-width:470px;margin:0 0 18px}.hero-art{font-size:95px;padding:12px 30px 12px 0;filter:drop-shadow(0 14px 13px #140d3277);transform:rotate(-18deg)}
+.btn{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:9px 13px;border-radius:11px;font-size:12px;font-weight:750;display:inline-flex;gap:6px;align-items:center;justify-content:center}
+.btn:hover{border-color:var(--accent)}.btn.primary{background:linear-gradient(115deg,#9e7ffa,#7452d6);border-color:transparent;color:white}.btn.white{background:white;border-color:white;color:#342551}.btn:disabled{opacity:.55;cursor:not-allowed}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.stack{display:grid;gap:10px}.lesson{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:13px;margin-top:10px}.lesson strong{font-size:13px}.lesson small{color:var(--muted);font-size:11px;display:block}.lesson .left{display:flex;align-items:center;gap:11px}.lesson .em{font-size:20px}.lesson.done{opacity:.72}.lesson.done strong{text-decoration:line-through}.lesson input{accent-color:var(--accent);width:17px;height:17px}
+.bar{height:8px;background:var(--panel2);border-radius:99px;overflow:hidden;flex:1}.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--mint));border-radius:99px}
+.skill{display:flex;align-items:center;gap:12px;margin-top:16px;font-size:12px}.skill label{width:102px}.skill span{width:42px;text-align:right;color:var(--muted)}
+.tag{display:inline-block;padding:5px 9px;border-radius:99px;background:var(--panel2);color:var(--muted);font-size:11px;font-weight:700;white-space:nowrap}.tag.green{color:var(--mint);background:#59d9b91b}.tag.purple{color:var(--accent);background:#aa87fa1d}.tag.orange{color:var(--yellow);background:#f9c5781a}.tag.red{color:var(--red);background:#f17a9b1a}.tag.gray{color:var(--gray)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:14px}.day{background:var(--panel2);border:1px solid var(--border);border-radius:12px;text-align:center;padding:11px 3px;font-size:11px;color:var(--muted)}.day b{font-size:18px;display:block;color:var(--accent);margin-top:8px}.day.rest b{color:var(--gray)}
+.chart{width:100%;height:auto;margin-top:15px}.chart text{fill:var(--muted);font-size:11px}.chart .axis{stroke:var(--border);stroke-width:1}.chart .trend{fill:none;stroke:var(--accent);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+fieldset{border:0;padding:0;margin:0}.field{display:grid;gap:5px;font-weight:650;font-size:12px;margin-bottom:13px}.field label{color:var(--muted)}.input{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:11px;padding:10px 12px;min-width:0}.input::placeholder{color:var(--muted)}textarea.input{resize:vertical;min-height:112px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}.filters .input{flex:1;min-width:150px}.filters select{max-width:185px}.toggle{display:inline-flex;gap:4px;padding:4px;border-radius:12px;border:1px solid var(--border);background:var(--panel2)}.toggle button{border:0;background:transparent;color:var(--muted);padding:7px 12px;border-radius:8px;font-size:12px}.toggle .chosen{color:var(--accent);background:var(--panel)}
+.tablewrap{overflow:auto;border:1px solid var(--border);border-radius:14px}table{border-collapse:collapse;min-width:530px;width:100%}th,td{padding:13px;text-align:left;border-bottom:1px solid var(--border);font-size:12px}th{font-size:11px;background:var(--panel2);color:var(--muted)}td strong{font-size:13px}
+.wordcards{grid-template-columns:repeat(3,minmax(0,1fr))}.word-card{min-height:150px;display:flex;flex-direction:column;justify-content:space-between}.word-card strong{font-size:21px}.word-card p{font-size:12px;color:var(--muted);margin:5px 0}.word-card em{font-size:11px;color:var(--muted)}
+.flash{min-height:200px;border-radius:20px;background:linear-gradient(130deg,#392f67,#23525c);display:grid;place-items:center;text-align:center;color:white;padding:22px;cursor:pointer}.flash strong{font-size:30px}.flash p{color:#e0d9f1;font-size:12px}
+.option{display:block;text-align:left;margin-top:10px;width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:13px;font-size:13px}.option.correct{border-color:var(--mint)}.option.wrong{border-color:var(--red)}
+.callout{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:15px;color:var(--muted);font-size:12px;margin-bottom:19px}.callout b{color:var(--text)}
+.mini-stat{font-size:23px;font-weight:800;margin:8px 0}.history{display:flex;gap:12px;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border)}.history:last-child{border-bottom:0}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:var(--bg);padding:13px 17px;border-radius:12px;box-shadow:0 15px 35px var(--shadow);display:none;z-index:5;max-width:330px}.toast.show{display:block}.fine{font-size:11px;color:var(--muted);margin-top:18px}
+@media(max-width:1200px){.stats{grid-template-columns:repeat(2,1fr)}.twocol{grid-template-columns:1fr}.wordcards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){.layout{display:block}aside{height:auto;position:relative;padding:15px}.brand{padding:5px 5px 15px}.nav-title,.aside-foot{display:none}nav{display:flex;overflow-x:auto}nav .nav{white-space:nowrap;width:auto}.hero-art{font-size:70px}main{padding:18px 15px 50px}}
+@media(max-width:550px){.stats,.three,.wordcards{grid-template-columns:1fr}.hero-art{display:none}.hero{padding:24px}.days{gap:3px}.day{padding:8px 2px}.card{padding:18px}.top{align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+  <div class="brand"><div class="logo">ET.</div><div><b>English Tracker</b><small>YOUR LEARNING SPACE</small></div></div>
+  <div class="nav-title">Учебный кабинет</div>
+  <nav id="nav" aria-label="Разделы">
+    <button class="nav active" data-page="home"><span class="ic">⌂</span>Главная</button>
+    <button class="nav" data-page="plan"><span class="ic">▤</span>План</button>
+    <button class="nav" data-page="progress"><span class="ic">▥</span>Прогресс</button>
+    <button class="nav" data-page="grammar"><span class="ic">◫</span>Грамматика</button>
+    <button class="nav" data-page="words"><span class="ic">▦</span>Слова</button>
+    <button class="nav" data-page="checks"><span class="ic">✓</span>Проверки</button>
+    <button class="nav" data-page="settings"><span class="ic">⚙</span>Настройки</button>
+  </nav>
+  <div class="aside-foot"><strong>Путь к свободной речи ✨</strong><p>Небольшие шаги — уверенные результаты.</p><div class="bar"><i style="width:63%"></i></div><p>Демонстрационный прогресс</p></div>
+</aside>
+<main>
+<div class="top"><div class="crumb">English Tracker / <b id="breadcrumb">Главная</b></div><div class="topright"><span class="pill accent">✧ PREVIEW 2.0</span><span class="pill">Демо-данные</span><button class="btn" id="themeBtn">☀ Переключить тему</button><div class="avatar">K</div></div></div>
+<div class="callout"><b>Интерактивный прототип, не рабочий кабинет.</b> Все данные вымышленные. Демо сохраняется только в браузере; авторизация Google и синхронизация с Google Sheets пока не подключены.</div>
+
+<section class="view current" id="home">
+<h1>Твой английский. Твой прогресс. ✨</h1><p class="sub">Продуманный путь к свободному разговору: план на сегодня, результаты и немного вдохновения.</p>
+<div class="hero"><div><strong>ТВОЙ ЛИЧНЫЙ МАРШРУТ</strong><h2>Ещё один шаг к свободному английскому</h2><p>Сегодня 60 минут практики. Начнём с разговорной речи и закрепим новые выражения.</p><button class="btn white" data-go="plan">Открыть план →</button></div><div class="hero-art" aria-hidden="true">🚀</div></div>
+<div class="grid stats">
+<div class="card metric"><span class="label">Качество знаний</span><span class="symbol">✦</span><div class="n">74%</div><span class="hint good">↗ +8% по проверкам</span></div>
+<div class="card metric"><span class="label">Освоено тем</span><span class="symbol">◫</span><div class="n">18 <small style="font-size:14px;color:var(--muted)">/ 32</small></div><span class="hint">С подтверждённым освоением</span></div>
+<div class="card metric"><span class="label">Учебная регулярность</span><span class="symbol">♨</span><div class="n">5 <small style="font-size:14px;color:var(--muted)">дней</small></div><span class="hint gold">Гибкая серия занятий</span></div>
+<div class="card metric"><span class="label">Практика за неделю</span><span class="symbol">◷</span><div class="n">4 ч 20 м</div><span class="hint">Цель — 5 часов</span></div>
+</div>
+<div class="grid twocol"><article class="card"><div class="row"><div><h3>Сегодня в фокусе</h3><p class="hint">Практический план можно менять</p></div><button class="btn" data-go="plan">Весь план →</button></div><div id="homeTasks"></div></article>
+<article class="card"><h3>Навыки английского</h3><p class="hint">Результаты тренировочных проверок</p><div id="homeSkills"></div><button class="btn" data-go="progress" style="margin-top:10px">Аналитика →</button></article></div>
+<div class="grid twocol"><article class="card"><h3>Динамика прогресса</h3><p class="hint">Демонстрационные результаты за шесть месяцев</p><svg class="chart" viewBox="0 0 550 230" role="img" aria-label="Линия прогресса растёт от 42 до 74 процентов"><defs><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#a98cff" stop-opacity=".25"/><stop offset="1" stop-color="#a98cff" stop-opacity="0"/></linearGradient></defs><path d="M35 30H530 M35 80H530 M35 130H530 M35 180H530" stroke="var(--border)" fill="none"/><path d="M35 160 L130 145 L225 119 L320 128 L415 87 L530 56 L530 190 L35 190Z" fill="url(#fade)"/><path d="M35 160 L130 145 L225 119 L320 128 L415 87 L530 56" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linejoin="round"/><g fill="var(--accent)"><circle cx="35" cy="160" r="5"/><circle cx="130" cy="145" r="5"/><circle cx="225" cy="119" r="5"/><circle cx="320" cy="128" r="5"/><circle cx="415" cy="87" r="5"/><circle cx="530" cy="56" r="6"/></g><g fill="var(--muted)" font-size="12"><text x="35" y="215">июн</text><text x="130" y="215">июл</text><text x="225" y="215">авг</text><text x="320" y="215">сен</text><text x="415" y="215">окт</text><text x="512" y="215">ноя</text></g></svg></article>
+<article class="card"><h3>Серия занятий</h3><p class="hint">Выходные и плановые дни отдыха не обрывают серию</p><div class="days"><div class="day">Пн<b>✓</b></div><div class="day">Вт<b>✓</b></div><div class="day">Ср<b>✓</b></div><div class="day">Чт<b>✓</b></div><div class="day">Пт<b>✓</b></div><div class="day rest">Сб<b>–</b></div><div class="day rest">Вс<b>–</b></div></div><div class="row" style="margin-top:19px"><div><strong>🏅 3 достижения</strong><p class="hint">Первый диалог · 100 слов · 5 активных дней</p></div><span class="tag purple">Новый рубеж</span></div></article></div>
+</section>
+
+<section class="view" id="plan">
+<h1>План обучения</h1><p class="sub">Умный маршрут с возможностью корректировки. ChatGPT — преподаватель, здесь отмечаем занятия и фиксируем итоги.</p>
+<div class="grid twocol"><article class="card"><div class="row"><div><h3>Твой план на сегодня</h3><p class="hint">Выбери, сколько времени готова заниматься</p></div><select class="input" id="minutes" style="max-width:145px"><option value="15">15 минут</option><option value="30">30 минут</option><option value="60" selected>60 минут</option><option value="120">120 минут</option></select></div>
+<div id="planTasks"></div><div class="row" style="margin-top:18px"><button class="btn primary" id="addTask">＋ Добавить задачу</button><span class="hint" id="taskSummary"></span></div></article>
+<article class="card"><h3>Как проходит занятие</h3><p class="hint">Три коротких шага</p><div class="stack" style="margin-top:17px"><div class="lesson"><div><strong>01 · Практика с ChatGPT</strong><small>Диалог, упражнение или аудирование</small></div>💬</div><div class="lesson"><div><strong>02 · Отчёт от преподавателя</strong><small>Ошибки, новые слова, оценка навыков</small></div>📝</div><div class="lesson"><div><strong>03 · Итог в трекере</strong><small>Вставь отчёт и сохрани историю</small></div>✨</div></div><button class="btn" data-go="checks" style="margin-top:18px">Добавить отчёт →</button></article></div>
+</section>
+
+<section class="view" id="progress">
+<h1>Аналитика прогресса</h1><p class="sub">Не смешиваем знания, освоение и регулярность в одну цифру — так рост виден честнее.</p>
+<div class="grid stats"><div class="card metric"><span class="label">Качество проверок</span><div class="n">74%</div><span class="hint good">+8 пунктов</span></div><div class="card metric"><span class="label">Освоение грамматики</span><div class="n">18/32</div><span class="hint">56% программы</span></div><div class="card metric"><span class="label">Активность</span><div class="n">5/5</div><span class="hint">Запланированных дней</span></div><div class="card metric"><span class="label">Не проверено</span><div class="n" style="color:var(--gray)">4</div><span class="hint">Серый статус — нет проверки</span></div></div>
+<div class="grid twocol"><article class="card"><h3>Профиль навыков</h3><p class="hint">Отдельная оценка для каждого навыка</p><div id="progressSkills"></div></article><article class="card"><h3>Качество по последним проверкам</h3><p class="hint">Демонстрационная динамика</p><div class="row" style="align-items:flex-end;height:230px;margin-top:18px;gap:12px"><div style="height:52%;flex:1;background:#6d57bc;border-radius:9px 9px 0 0"></div><div style="height:67%;flex:1;background:#826acc;border-radius:9px 9px 0 0"></div><div style="height:61%;flex:1;background:#997fe6;border-radius:9px 9px 0 0"></div><div style="height:79%;flex:1;background:#66beac;border-radius:9px 9px 0 0"></div><div style="height:74%;flex:1;background:#a88cfa;border-radius:9px 9px 0 0"></div></div><p class="hint">Проверки № 1–5 · проценты, не часы занятий</p></article></div>
+<div class="card"><h3>История изменений</h3><p class="hint">Примеры записей для прототипа</p><div class="history"><span>05.11.2026 · Speaking</span><span class="tag green">+6 пунктов</span></div><div class="history"><span>07.11.2026 · Grammar</span><span class="tag purple">Закрепление</span></div><div class="history"><span>10.11.2026 · Vocabulary</span><span class="tag green">12 слов повторено</span></div></div>
+</section>
+
+<section class="view" id="grammar">
+<h1>Грамматика</h1><p class="sub">Освоение подтверждается несколькими успешными проверками с интервалами. Непроверенные темы — серые.</p>
+<div class="grid stats"><div class="card metric"><span class="label">Темы программы</span><div class="n">32</div><span class="hint">Учебная карта</span></div><div class="card metric"><span class="label">Освоено</span><div class="n good">18</div><span class="hint">Несколько подтверждений</span></div><div class="card metric"><span class="label">Закрепляю</span><div class="n purple">6</div><span class="hint">Нужны повторные проверки</span></div><div class="card metric"><span class="label">Без проверки</span><div class="n" style="color:var(--gray)">4</div><span class="hint">Результата ещё нет</span></div></div>
+<article class="card"><div class="row" style="margin-bottom:16px"><div><h3>Карта тем</h3><p class="hint">Статус не равен числу просмотренных уроков</p></div><select id="grammarFilter" class="input" style="max-width:190px"><option value="all">Все статусы</option><option value="Освоено">Освоено</option><option value="Закрепляю">Закрепляю</option><option value="Изучаю">Изучаю</option><option value="Повторить">Повторить</option><option value="Не проверено">Не проверено</option></select></div><div id="grammarList"></div></article>
+</section>
+
+<section class="view" id="words">
+<h1>Слова и повторение</h1><p class="sub">Поиск, сортировка, статусы повторения, таблица и карточки. В демо можно практиковаться без риска для Google Sheets.</p>
+<div class="grid stats"><div class="card metric"><span class="label">Всего слов в демо</span><div class="n" id="wordCount">10</div><span class="hint">В этом браузере</span></div><div class="card metric"><span class="label">Выучено</span><div class="n good" id="wordLearned">3</div><span class="hint">Пройдено закрепление</span></div><div class="card metric"><span class="label">Повторить</span><div class="n gold" id="wordReview">3</div><span class="hint">Запланировано сегодня</span></div><div class="card metric"><span class="label">Не проверено</span><div class="n" id="wordUnchecked" style="color:var(--gray)">2</div><span class="hint">Пока без статуса знаний</span></div></div>
+<article class="card"><div class="row" style="margin-bottom:15px"><div><h3>Мой словарь</h3><p class="hint">Слова и выражения · демонстрация интерфейса</p></div><div class="toggle"><button id="viewTable" class="chosen">Таблица</button><button id="viewCards">Карточки</button></div></div>
+<div class="filters"><input class="input" id="wordSearch" placeholder="⌕ Найти слово, перевод или пример" aria-label="Поиск слов"><select class="input" id="wordFilter"><option value="all">Все статусы</option><option value="review">Повторить</option><option value="learning">Изучаю</option><option value="learned">Освоено</option><option value="unchecked">Не проверено</option></select><select class="input" id="wordSort"><option value="en">По алфавиту</option><option value="status">По статусу</option><option value="recent">Новые сначала</option></select><button class="btn" id="exportWords">↓ Экспорт JSON</button></div>
+<div id="wordList"></div></article>
+<div class="grid twocol"><article class="card"><div class="row"><h3>Карточка для повторения</h3><span class="tag purple" id="flashCount">1 / 10</span></div><div class="flash" id="flash" role="button" tabindex="0" aria-label="Перевернуть карточку"><div><strong id="flashMain">confident</strong><p id="flashSub">Нажми, чтобы увидеть перевод</p></div></div><div class="row" style="margin-top:13px"><button class="btn" id="flashPrev">← Назад</button><button class="btn primary" id="flashFlip">Перевернуть</button><button class="btn" id="flashNext">Дальше →</button></div></article>
+<article class="card"><h3>Мини-тест</h3><p class="hint">Проверь понимание новых слов</p><div id="quiz"></div><div class="row" style="margin-top:13px"><span class="hint" id="quizScore">Результат сохраняется только в текущей сессии</span><button class="btn" id="quizNext">Следующий вопрос →</button></div></article></div>
+</section>
+
+<section class="view" id="checks">
+<h1>Проверки и отчёты</h1><p class="sub">После занятия с ChatGPT скопируй подробный отчёт сюда. Показанная форма — прототип импорта, не синхронизация с ChatGPT.</p>
+<div class="grid twocol"><article class="card"><h3>Добавить результат занятия</h3><p class="hint" style="margin-bottom:16px">Сохраняется локально. Укажи, что оценила преподавательская проверка.</p>
+<form id="reportForm"><div class="field"><label for="reportTitle">Тема занятия</label><input id="reportTitle" class="input" required placeholder="Например, Past Simple в разговоре"></div>
+<div class="row"><div class="field" style="flex:1;min-width:120px"><label for="reportTime">Длительность, мин</label><input id="reportTime" class="input" type="number" min="1" max="240" value="30" required></div><div class="field" style="flex:1;min-width:120px"><label for="reportScore">Результат, % (необязательно)</label><input id="reportScore" class="input" type="number" min="0" max="100" placeholder="0–100"></div></div>
+<div class="field"><label for="reportSkill">Навык</label><select class="input" id="reportSkill"><option>Speaking</option><option>Listening</option><option>Reading</option><option>Writing</option><option>Grammar</option><option>Vocabulary</option></select></div>
+<div class="field"><label for="reportBody">Подробный отчёт от ChatGPT · ошибки, комментарии, новые слова</label><textarea id="reportBody" class="input" required placeholder="Вставь текст отчёта из чата…"></textarea></div>
+<button type="submit" class="btn primary">＋ Сохранить отчёт</button></form></article>
+<article class="card"><h3>История проверок</h3><p class="hint">Новые отчёты появятся сверху</p><div id="reportHistory"></div></article></div>
+</section>
+
+<section class="view" id="settings">
+<h1>Настройки</h1><p class="sub">Управление темой, демо-режимом и данными. Настоящие Google-вход и запись в Sheets добавляются только после утверждения интерфейса.</p>
+<div class="grid twocol"><article class="card"><h3>Внешний вид</h3><p class="hint">Две равноправные темы, без потери настроек при обновлении</p><div class="row" style="margin-top:20px"><strong>Цветовая тема</strong><button class="btn" id="settingsTheme">☀ / ☾ Переключить</button></div><div class="history"><span>Основное устройство</span><span class="tag purple">Компьютер</span></div><div class="history"><span>Режим демонстрации</span><span class="tag green">Отдельная ссылка ?demo=1</span></div></article>
+<article class="card"><h3>Данные и подключения</h3><p class="hint" style="margin-bottom:17px">Безопасный экран будущей интеграции</p><div class="lesson"><div><strong>Вход через Google</strong><small>Не подключён в прототипе</small></div><span class="tag gray">Планируется</span></div><div class="lesson"><div><strong>Google Sheets — чтение и запись</strong><small>Потребуется авторизация и защищённый API</small></div><span class="tag gray">Планируется</span></div><div class="row" style="margin-top:18px"><button class="btn" id="exportAll">↓ Экспорт демо</button><button class="btn" id="resetDemo">↻ Сбросить демо</button></div><p class="fine">Сброс удалит только локальные изменения этого прототипа. Исходный сайт и таблицы останутся нетронутыми.</p></article></div>
+<div class="card"><h3>Для согласования дизайна</h3><p class="hint">После оценки всех семи страниц можно уточнить размеры карточек, графики, цвета и расположение действий. Данные здесь всегда демонстрационные.</p></div>
+</section>
+
+<p class="fine" style="margin-top:31px">English Tracker 2.0 · Отдельная экспериментальная версия. Никакие действия не изменяют данные Google Sheets.</p>
+</main></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+"use strict";
+const KEY="et-v2-demo-v1";
+const INITIAL_WORDS=[
+{en:"make progress",ru:"делать успехи",ex:"I am making progress.",s:"learned"},
+{en:"confident",ru:"уверенный",ex:"I feel confident.",s:"review"},
+{en:"although",ru:"хотя",ex:"Although it was hard, I tried.",s:"learning"},
+{en:"figure out",ru:"разобраться",ex:"I'll figure it out.",s:"review"},
+{en:"appointment",ru:"встреча по записи",ex:"I have an appointment.",s:"learned"},
+{en:"eventually",ru:"в конце концов",ex:"Eventually, I understood.",s:"learning"},
+{en:"bring up",ru:"поднять тему",ex:"She brought up a question.",s:"unchecked"},
+{en:"hesitate",ru:"колебаться",ex:"Don't hesitate to ask.",s:"unchecked"},
+{en:"reliable",ru:"надёжный",ex:"This source is reliable.",s:"learned"},
+{en:"in advance",ru:"заранее",ex:"Please book in advance.",s:"review"}];
+const INITIAL_TASKS=[
+{t:"Speaking · расскажи о своих планах",desc:"Монолог и вопросы с ChatGPT",min:15,em:"💬",done:false},
+{t:"Listening · разговор о путешествиях",desc:"Послушать и пересказать",min:15,em:"🎧",done:false},
+{t:"Vocabulary · закрепление выражений",desc:"Карточки и мини-тест",min:10,em:"🗂",done:true},
+{t:"Grammar · Present Perfect",desc:"Объяснение и практика",min:20,em:"✏️",done:false}];
+const SKILLS=[["Speaking",62],["Listening",74],["Reading",83],["Writing",57],["Grammar",70],["Pronunciation",null]];
+const GRAMMAR=[["Present Simple","Освоено","green"],["Present Continuous","Освоено","green"],["Present Perfect","Закрепляю","purple"],["Past Perfect","Изучаю","orange"],["Conditionals","Повторить","red"],["Reported Speech","Не проверено","gray"],["Future Perfect","Не проверено","gray"]];
+const QS=[{q:"Что означает confident?",opts:["уверенный","надёжный","профессиональный"],ok:0},{q:"Как сказать «заранее»?",opts:["eventually","in advance","although"],ok:1},{q:"Что значит figure out?",opts:["начать разговор","рассказать","разобраться"],ok:2}];
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+function escapeText(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
+let stored=load();
+let state={theme:stored.theme==="light"?"light":"dark",words:Array.isArray(stored.words)?stored.words:INITIAL_WORDS.map(x=>({...x})),tasks:Array.isArray(stored.tasks)?stored.tasks:INITIAL_TASKS.map(x=>({...x})),minutes:[15,30,60,120].includes(+stored.minutes)?+stored.minutes:60,reports:Array.isArray(stored.reports)?stored.reports:[],wordView:"table",flash:0,flipped:false,q:0,answer:null,score:0};
+function save(){try{localStorage.setItem(KEY,JSON.stringify({theme:state.theme,words:state.words,tasks:state.tasks,minutes:state.minutes,reports:state.reports}))}catch(e){}}
+function toast(msg){const el=$("#toast");el.textContent=msg;el.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove("show"),2800)}
+function page(name){if(!$("#"+name))return;$$(".view").forEach(v=>v.classList.toggle("current",v.id===name));$$(".nav").forEach(v=>{v.classList.toggle("active",v.dataset.page===name);v.setAttribute("aria-current",v.dataset.page===name?"page":"false")});$("#breadcrumb").textContent=$('.nav[data-page="'+name+'"]').textContent.trim();if(location.hash!=="#"+name)history.replaceState(null,"","#"+name);window.scrollTo({top:0,behavior:"instant"});render()}
+function theme(){state.theme=state.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=state.theme;$("#themeBtn").textContent=state.theme==="dark"?"☀ Светлая тема":"☾ Тёмная тема";save()}
+function status(s){return ({review:["Повторить","orange"],learning:["Изучаю","purple"],learned:["Освоено","green"],unchecked:["Не проверено","gray"]}[s]||["Не проверено","gray"])}
+function htmlTag(x){return '<span class="tag '+x[1]+'">'+x[0]+'</span>'}
+function skillMarkup(){return SKILLS.map(([name,num])=>'<div class="skill"><label>'+name+'</label><div class="bar"><i style="width:'+(num===null?0:num)+'%"></i></div><span>'+(num===null?"—":num+"%")+'</span></div>').join("")}
+function renderTasks(){let tasks=state.tasks;let visible=[],total=0;for(let t of tasks){if(total+t.min<=state.minutes || visible.length===0){visible.push(t);total+=t.min}}let item=(t,i)=>'<label class="lesson '+(t.done?"done":"")+'"><div class="left"><span class="em">'+escapeText(t.em)+'</span><div><strong>'+escapeText(t.t)+'</strong><small>'+escapeText(t.desc)+' · '+t.min+' минут</small></div></div><input type="checkbox" data-task="'+i+'" '+(t.done?"checked":"")+' aria-label="Отметить занятие"></label>';
+$("#homeTasks").innerHTML=visible.slice(0,3).map(t=>item(t,tasks.indexOf(t))).join("");
+$("#planTasks").innerHTML=visible.map(t=>item(t,tasks.indexOf(t))).join("");
+$("#taskSummary").textContent=visible.filter(t=>t.done).length+" из "+visible.length+" выполнено";
+$("#minutes").value=state.minutes;
+}
+function renderGrammar(){let filter=$("#grammarFilter").value;let arr=GRAMMAR.filter(t=>filter==="all"||filter===t[1]);$("#grammarList").innerHTML=arr.length?arr.map(t=>'<div class="lesson"><div><strong>'+t[0]+'</strong><small>Учебная тема · '+(t[1]==="Не проверено"?"нет данных проверки":"есть учебные результаты")+'</small></div>'+htmlTag([t[1],t[2]])+'</div>').join(""):'<p class="hint">По фильтру ничего не найдено.</p>'}
+function filteredWords(){let term=$("#wordSearch").value.toLowerCase().trim(),f=$("#wordFilter").value,s=$("#wordSort").value;let a=state.words.filter(w=>(f==="all"||w.s===f)&&[w.en,w.ru,w.ex].join(" ").toLowerCase().includes(term));if(s==="en")a.sort((x,y)=>x.en.localeCompare(y.en));if(s==="status")a.sort((x,y)=>x.s.localeCompare(y.s));if(s==="recent")a.reverse();return a}
+function renderWords(){let a=filteredWords();
+$("#wordCount").textContent=state.words.length;$("#wordLearned").textContent=state.words.filter(w=>w.s==="learned").length;$("#wordReview").textContent=state.words.filter(w=>w.s==="review").length;$("#wordUnchecked").textContent=state.words.filter(w=>w.s==="unchecked").length;
+$("#viewTable").classList.toggle("chosen",state.wordView==="table");$("#viewCards").classList.toggle("chosen",state.wordView==="cards");
+if(state.wordView==="table"){$("#wordList").innerHTML='<div class="tablewrap"><table><thead><tr><th>Слово</th><th>Перевод</th><th>Пример</th><th>Статус</th></tr></thead><tbody>'+a.map(w=>'<tr><td><strong>'+escapeText(w.en)+'</strong></td><td>'+escapeText(w.ru)+'</td><td>'+escapeText(w.ex)+'</td><td>'+htmlTag(status(w.s))+'</td></tr>').join("")+'</tbody></table></div>'}else{$("#wordList").innerHTML='<div class="grid wordcards">'+a.map(w=>'<div class="card word-card"><div><strong>'+escapeText(w.en)+'</strong><p>'+escapeText(w.ru)+'</p><em>'+escapeText(w.ex)+'</em></div><div style="margin-top:14px">'+htmlTag(status(w.s))+'</div></div>').join("")+'</div>'}
+if(!a.length)$("#wordList").innerHTML='<div class="callout">По текущему запросу слова не найдены.</div>';
+flashRender();quizRender()
+}
+function flashRender(){let w=state.words[state.flash%state.words.length];if(!w)return;$("#flashMain").textContent=state.flipped?w.ru:w.en;$("#flashSub").textContent=state.flipped?w.ex:"Нажми, чтобы увидеть перевод";$("#flashCount").textContent=(state.flash+1)+" / "+state.words.length}
+function quizRender(){let q=QS[state.q%QS.length];$("#quiz").innerHTML='<h3 style="margin-top:17px">'+escapeText(q.q)+'</h3>'+q.opts.map((o,i)=>'<button class="option '+(state.answer!==null?(i===q.ok?"correct":i===state.answer?"wrong":""):"")+'" data-answer="'+i+'" '+(state.answer!==null?"disabled":"")+'>'+escapeText(o)+'</button>').join("")+(state.answer===null?"":'<p class="hint">'+(state.answer===q.ok?"✓ Верно!":"Правильный ответ: "+q.opts[q.ok])+'</p>');$("#quizScore").textContent="Верных ответов: "+state.score}
+function renderReports(){let a=state.reports.slice().reverse();$("#reportHistory").innerHTML=a.length?a.map(r=>'<div class="history"><div><strong>'+escapeText(r.title)+'</strong><div class="hint">'+escapeText(r.skill)+' · '+Number(r.min)+' мин · '+escapeText(r.date)+'</div><details><summary class="hint" style="cursor:pointer">Открыть отчёт</summary><p style="white-space:pre-wrap;font-size:12px">'+escapeText(r.body)+'</p></details></div>'+(r.score===""?"":htmlTag([r.score+"%","purple"]))+'</div>').join(""):'<div class="callout">Пока нет сохранённых отчётов. Попробуй вставить пример с результатами занятия.</div>'}
+function render(){renderTasks();$("#homeSkills").innerHTML=skillMarkup();$("#progressSkills").innerHTML=skillMarkup();renderGrammar();renderWords();renderReports()}
+function download(name,value){let blob=new Blob([JSON.stringify(value,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+document.addEventListener("click",e=>{
+let go=e.target.closest("[data-page],[data-go]");if(go){page(go.dataset.page||go.dataset.go);return}
+let answer=e.target.closest("[data-answer]");if(answer&&state.answer===null){state.answer=+answer.dataset.answer;if(state.answer===QS[state.q%QS.length].ok)state.score++;quizRender();return}
+});
+document.addEventListener("change",e=>{if(e.target.dataset.task!==undefined){state.tasks[+e.target.dataset.task].done=e.target.checked;save();renderTasks();toast("Занятие обновлено в демо")}});
+$("#themeBtn").onclick=theme;$("#settingsTheme").onclick=theme;
+$("#minutes").onchange=e=>{state.minutes=+e.target.value;save();renderTasks()};
+$("#addTask").onclick=()=>{let title=prompt("Название задачи (демо):");if(!title||!title.trim())return;state.tasks.push({t:title.trim().slice(0,120),desc:"Пользовательская задача",min:15,em:"✏️",done:false});state.minutes=120;save();renderTasks();toast("Задача добавлена в демо")};
+$("#grammarFilter").onchange=renderGrammar;
+$("#wordSearch").oninput=renderWords;$("#wordFilter").onchange=renderWords;$("#wordSort").onchange=renderWords;
+$("#viewTable").onclick=()=>{state.wordView="table";renderWords()};$("#viewCards").onclick=()=>{state.wordView="cards";renderWords()};
+$("#flash").onclick=()=>{state.flipped=!state.flipped;flashRender()};$("#flash").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();$("#flash").click()}};
+$("#flashFlip").onclick=()=>$("#flash").click();
+$("#flashPrev").onclick=()=>{state.flash=(state.flash+state.words.length-1)%state.words.length;state.flipped=false;flashRender()};
+$("#flashNext").onclick=()=>{state.flash=(state.flash+1)%state.words.length;state.flipped=false;flashRender()};
+$("#quizNext").onclick=()=>{state.q=(state.q+1)%QS.length;state.answer=null;quizRender()};
+$("#reportForm").onsubmit=e=>{e.preventDefault();state.reports.push({title:$("#reportTitle").value.trim().slice(0,200),min:$("#reportTime").value,score:$("#reportScore").value,skill:$("#reportSkill").value,body:$("#reportBody").value.slice(0,20000),date:new Date().toLocaleDateString("ru-RU")});save();e.target.reset();renderReports();toast("Отчёт сохранён локально")};
+$("#exportWords").onclick=()=>download("english-tracker-v2-demo-words.json",state.words);
+$("#exportAll").onclick=()=>download("english-tracker-v2-demo-backup.json",{words:state.words,tasks:state.tasks,reports:state.reports,minutes:state.minutes});
+$("#resetDemo").onclick=()=>{if(!confirm("Сбросить только локальные изменения прототипа?"))return;localStorage.removeItem(KEY);location.reload()};
+document.documentElement.dataset.theme=state.theme;$("#themeBtn").textContent=state.theme==="dark"?"☀ Светлая тема":"☾ Тёмная тема";
+render();page(["home","plan","progress","grammar","words","checks","settings"].includes(location.hash.slice(1))?location.hash.slice(1):"home");
+</script>
+</body></html>
